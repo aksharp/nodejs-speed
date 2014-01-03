@@ -1,0 +1,10 @@
+{
+  "name": "TEST",
+  "description": "TEST",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "express": "3.x",
+    "hello-module": "0.0.1"
+  }
+}

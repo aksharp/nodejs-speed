@@ -1,0 +1,90 @@
+<html>
+<head>
+<script type="text/javascript" src="public/jquery-2.0.3.min.js"></script>
+<style>
+.red {
+  color: #ff0000;
+}
+.green {
+  color: #00ff00;
+}
+</style>
+</head>
+<body>
+
+<div id="div0"></div>
+<div class="red" id="div1"></div>
+<div class="green" id="div2"></div>
+<div class="percent" id="percentDiff"></div>
+<br>
+<button id="btn">Perform POC</button>
+
+<script>
+
+  var jsElapsed = -1;
+  var cppElapsed = -1;
+  
+  var clearElapsed = function(){
+    jsElapsed = -1;
+    cppElapsed = -1;
+    $('#percentDiff').html('');
+  };
+
+  var setElapsed = function(fName, elapsed){
+    if (fName === 'js'){
+      jsElapsed = elapsed;
+    }
+    if (fName === 'c++'){
+      cppElapsed = elapsed;
+    }
+    if (jsElapsed > 0 && cppElapsed > 0) {
+      var percentDiff = 100 - cppElapsed * 100 / jsElapsed;
+      var roundedPercentDiff = Math.round(percentDiff);
+      $('#percentDiff').html('C++ is ' + roundedPercentDiff + '% faster than JS');
+    }
+  }
+
+  var rndArr = function(arrSize, maxNum) {
+    var arr = []; 
+    for (var i=0; i<arrSize; ++i) {
+      arr[i] = Math.floor((Math.random() * maxNum) + 1); 
+    }   
+    return arr;
+  };
+
+  var performPOC = function(url, outId, data) {
+    $('#' + outId).html('loading...');
+    $.ajax({
+      url: url,
+      data: data,
+      dataType: 'json',
+      type: 'POST'
+    }).then(
+        function( data, textStatus, jqXHR ) {
+          var fName = data.fName;
+          var elapsed = data.elapsed;
+          var res = data.res;
+          var html = 'received ' + fName + ' elapsed: ' + elapsed 
+            + 'ms <br>result: ' + res.join(', ');
+          $('#' + outId).html(html);
+          setElapsed(fName, elapsed);
+        }, 
+        function( jqXHR, textStatus, errorThrown ) {
+          $('#' + outId).html('error');
+        }
+    );
+  }
+
+  $('#btn').click(function(){
+    clearElapsed();
+    var arrCommon = rndArr(10, 40);
+    $('#div0').html('data ' + arrCommon.join(", "));
+    var data = {"arr": arrCommon};
+    performPOC('http://localhost:5000/poc-js', 'div1', data);
+    performPOC('http://localhost:4000/poc-cpp', 'div2', data);
+  });
+</script>
+
+
+</body>
+</html>
