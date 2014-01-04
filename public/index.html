@@ -64,8 +64,9 @@
           var fName = data.fName;
           var elapsed = data.elapsed;
           var res = data.res;
-          var html = 'received ' + fName + ' elapsed: ' + elapsed 
-            + 'ms <br>result: ' + res.join(', ');
+          var html = fName + ' module time: ' 
+            + elapsed + 'ms <br>result: ' 
+            + res.join(', ');
           $('#' + outId).html(html);
           setElapsed(fName, elapsed);
         }, 
@@ -78,7 +79,7 @@
   $('#btn').click(function(){
     clearElapsed();
     var arrCommon = rndArr(10, 40);
-    $('#div0').html('data ' + arrCommon.join(", "));
+    $('#div0').html('Calculate Nth Fibonacci # for each N in (' + arrCommon.join(", ") + ')');
     var data = {"arr": arrCommon};
     performPOC('http://localhost:5000/poc-js', 'div1', data);
     performPOC('http://localhost:4000/poc-cpp', 'div2', data);
