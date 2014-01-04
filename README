@@ -1,7 +1,9 @@
 Step by Step
 
-1) node server-js.js
-2) node server-cpp.js
-3) node server-web.js
-4) open in browser: http://localhost:3000
-5) click on "Perform POC" button
+1) git clone https://github.com/aksharp/nodejs-speed.git
+2) npm install
+3) node server-js.js
+4) node server-cpp.js (in separate terminal)
+5) node server-web.js (in separate terminal)
+6) open in browser: http://localhost:3000
+7) click on "Perform POC" button
