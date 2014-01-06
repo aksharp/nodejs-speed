@@ -15,6 +15,7 @@
 <div id="div0"></div>
 <div class="red" id="div1"></div>
 <div class="green" id="div2"></div>
+<div class="green" id="div3"></div>
 <div class="percent" id="percentDiff"></div>
 <br>
 <button id="btn">Perform POC</button>
@@ -23,10 +24,12 @@
 
   var jsElapsed = -1;
   var cppElapsed = -1;
+  var openClElapsed = -1;
   
   var clearElapsed = function(){
     jsElapsed = -1;
     cppElapsed = -1;
+    openClElapsed = -1;
     $('#percentDiff').html('');
   };
 
@@ -36,6 +39,9 @@
     }
     if (fName === 'c++'){
       cppElapsed = elapsed;
+    }
+    if (fName === 'open-cl'){
+      openClElapsed = elapsed;
     }
     if (jsElapsed > 0 && cppElapsed > 0) {
       var percentDiff = 100 - cppElapsed * 100 / jsElapsed;
@@ -83,6 +89,7 @@
     var data = {"arr": arrCommon};
     performPOC('http://localhost:5000/poc-js', 'div1', data);
     performPOC('http://localhost:4000/poc-cpp', 'div2', data);
+    performPOC('http://localhost:4040/poc-open-cl', 'div3', data);
   });
 </script>
 

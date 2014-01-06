@@ -334,8 +334,8 @@ ifeq ($(strip $(foreach prefix,$(NO_LOAD),\
 endif
 ifeq ($(strip $(foreach prefix,$(NO_LOAD),\
     $(findstring $(join ^,$(prefix)),\
-                 $(join ^,hello.target.mk)))),)
-  include hello.target.mk
+                 $(join ^,fibs.target.mk)))),)
+  include fibs.target.mk
 endif
 
 quiet_cmd_regen_makefile = ACTION Regenerating $@
