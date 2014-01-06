@@ -15,15 +15,12 @@ using namespace v8;
 #pragma mark Utilities
 char * load_program_source(const char *filename)
 { 
-printf("load_program_source called \n");	
 	struct stat statbuf;
 	FILE *fh; 
 	char *source; 
 	
-printf("opening file \n");	
 	fh = fopen(filename, "r");
 	if (fh == 0){
-printf("no file found \n");	
 		return 0; 
   }
 	
@@ -32,7 +29,6 @@ printf("no file found \n");
 	fread(source, statbuf.st_size, 1, fh);
 	source[statbuf.st_size] = '\0'; 
 
-printf("source found \n");	
 	return source; 
 } 
 
@@ -40,7 +36,6 @@ printf("source found \n");
 #pragma mark Main OpenCL Routine
 int runCL(int * a, int * results, int n)
 {
-printf("runCL entry point \n");
 	cl_program program[1];
 	cl_kernel kernel[2];
 	
@@ -75,24 +70,19 @@ printf("runCL entry point \n");
 		err |= clGetDeviceInfo(device, CL_DEVICE_NAME, sizeof(device_name), 
 							  device_name, &returned_size);
 		assert(err == CL_SUCCESS);
-		printf("Connecting to %s %s...\n", vendor_name, device_name);
 	}
 	
 #pragma mark Context and Command Queue
 	{
 		// Now create a context to perform our calculation with the 
 		// specified device 
-printf("Creating context \n");
 		context = clCreateContext(0, 1, &device, NULL, NULL, &err);
 		assert(err == CL_SUCCESS);
-printf("Context created \n");
 		
-printf("Creating command queue \n");
 		// And also a command queue for the context
 //		cmd_queue = clCreateCommandQueue(context, device, 0, NULL);
 		cmd_queue = clCreateCommandQueue(context, device, 0, &err);
 		assert(err == CL_SUCCESS);
-printf("Command queue created \n");
 	}
 	
 #pragma mark Program and Kernel Creation
@@ -101,18 +91,14 @@ printf("Command queue created \n");
 		// The kernel/program is the project directory and in Xcode the executable
 		// is set to launch from that directory hence we use a relative path
 		const char * filename = "fibs.cl";
-printf("loading program source fibs.cl \n");
 		char *program_source = load_program_source(filename);
-printf("program source loaded \n");
 		program[0] = clCreateProgramWithSource(context, 1, (const char**)&program_source,
 											   NULL, &err);
 		assert(err == CL_SUCCESS);
-printf("program with source loaded");
 		
 		err = clBuildProgram(program[0], 0, NULL, NULL, NULL, NULL);
 		assert(err == CL_SUCCESS);
 		
-printf("program built");
 		// Now create the kernel "objects" that we want to use in the example file 
 		kernel[0] = clCreateKernel(program[0], "fibs", &err);
 	}
@@ -216,12 +202,7 @@ Handle<Value> ArrToFib(const Arguments& args) {
 	// Problem size
   int n = arrIn->Length();
 
-  printf("\n\n input array to ArrToFib function \n\n");
-  for(int i=0;i<n;i++){
-    printf("%d\n", (int)arrIn->Get(i).As<v8::Integer>()->Int32Value());
-	}
-
-	// Allocate some memory and a place for the results
+ 	// Allocate some memory and a place for the results
 	int * a = (int *)malloc(n*sizeof(int));
 	int * results = (int *)malloc(n*sizeof(int));
 	
@@ -231,28 +212,14 @@ Handle<Value> ArrToFib(const Arguments& args) {
 		results[i] = 0;
 	}
 
-  // PRINT ARRAY A
-  printf("\n\n input array to runCL function \n\n");
-  print_arr(a, n);
-
-	// Do the OpenCL calculation
+ 	// Do the OpenCL calculation
 	runCL(a, results, n);
 
-  // PRINT ARRAY A
-  printf("\n\n results array from runCL function \n\n");
-  print_arr(results, n);
-	
   // Array to return results
 	Local<Array> array = Array::New(n);
  	for(int j=0;j<n;j++) {
     array->Set(j, Integer::New(results[j])); 
   }
-
-  // PRINT ARRAY
-  printf("\n\n array as a result from ArrToFib function \n\n");
-  for(int i=0;i<n;i++){
-    printf("%d\n", (int)array->Get(i).As<v8::Integer>()->Int32Value());
-	}
 
 	// Free up memory
 	free(a);
