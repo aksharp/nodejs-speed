@@ -188,6 +188,7 @@ int main (int argc, const char * argv[]) {
     return 0;
 }
 */
+
 void print_arr(int * a, int size) {
 	for(int i=0;i<size;i++){
     printf("%d: %d\n", i, a[i]);
@@ -201,7 +202,6 @@ Handle<Value> ArrToFib(const Arguments& args) {
 	// Problem size
   int n = arrIn->Length();
 
-  printf("\n\n input array to ArrToFib function \n\n");
   for(int i=0;i<n;i++){
     printf("%d\n", (int)arrIn->Get(i).As<v8::Integer>()->Int32Value());
 	}
@@ -217,33 +217,26 @@ Handle<Value> ArrToFib(const Arguments& args) {
 	}
 
   // PRINT ARRAY A
-  printf("\n\n input array to runCL function \n\n");
   print_arr(a, n);
 
+/**********
 	// Do the OpenCL calculation
-//	runCL(a, results, n);
+	runCL(a, results, n);
 
+******/
   // PRINT ARRAY A
-  printf("\n\n results array from runCL function \n\n");
   print_arr(results, n);
 	
   // Array to return results
 	Local<Array> array = Array::New(n);
- 	for(int j=0;j<n;j++) {
-    array->Set(j, Integer::New(results[j])); 
-  }
-
-  // PRINT ARRAY
-  printf("\n\n array as a result from ArrToFib function \n\n");
-  for(int i=0;i<n;i++){
-    printf("%d\n", (int)array->Get(i).As<v8::Integer>()->Int32Value());
-	}
+ 	for(int j=0;j<n;j++) array->Set(j, Integer::New(results[j]));  
 
 	// Free up memory
 	free(a);
 	free(results);
 	
-  return  scope.Close(array);
+//  scope.Close(array);
+  scope.Close(array);
 }
 
 void Init(Handle<Object> exports) {
