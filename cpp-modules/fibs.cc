@@ -15,20 +15,24 @@ using namespace v8;
 #pragma mark Utilities
 char * load_program_source(const char *filename)
 { 
-	
+printf("load_program_source called \n");	
 	struct stat statbuf;
 	FILE *fh; 
 	char *source; 
 	
+printf("opening file \n");	
 	fh = fopen(filename, "r");
-	if (fh == 0)
+	if (fh == 0){
+printf("no file found \n");	
 		return 0; 
+  }
 	
 	stat(filename, &statbuf);
 	source = (char *) malloc(statbuf.st_size + 1);
 	fread(source, statbuf.st_size, 1, fh);
 	source[statbuf.st_size] = '\0'; 
-	
+
+printf("source found \n");	
 	return source; 
 } 
 
@@ -36,6 +40,7 @@ char * load_program_source(const char *filename)
 #pragma mark Main OpenCL Routine
 int runCL(int * a, int * results, int n)
 {
+printf("runCL entry point \n");
 	cl_program program[1];
 	cl_kernel kernel[2];
 	
@@ -77,11 +82,17 @@ int runCL(int * a, int * results, int n)
 	{
 		// Now create a context to perform our calculation with the 
 		// specified device 
+printf("Creating context \n");
 		context = clCreateContext(0, 1, &device, NULL, NULL, &err);
 		assert(err == CL_SUCCESS);
+printf("Context created \n");
 		
+printf("Creating command queue \n");
 		// And also a command queue for the context
-		cmd_queue = clCreateCommandQueue(context, device, 0, NULL);
+//		cmd_queue = clCreateCommandQueue(context, device, 0, NULL);
+		cmd_queue = clCreateCommandQueue(context, device, 0, &err);
+		assert(err == CL_SUCCESS);
+printf("Command queue created \n");
 	}
 	
 #pragma mark Program and Kernel Creation
@@ -89,15 +100,19 @@ int runCL(int * a, int * results, int n)
 		// Load the program source from disk
 		// The kernel/program is the project directory and in Xcode the executable
 		// is set to launch from that directory hence we use a relative path
-		const char * filename = "example.cl";
+		const char * filename = "fibs.cl";
+printf("loading program source fibs.cl \n");
 		char *program_source = load_program_source(filename);
+printf("program source loaded \n");
 		program[0] = clCreateProgramWithSource(context, 1, (const char**)&program_source,
 											   NULL, &err);
 		assert(err == CL_SUCCESS);
+printf("program with source loaded");
 		
 		err = clBuildProgram(program[0], 0, NULL, NULL, NULL, NULL);
 		assert(err == CL_SUCCESS);
 		
+printf("program built");
 		// Now create the kernel "objects" that we want to use in the example file 
 		kernel[0] = clCreateKernel(program[0], "fibs", &err);
 	}
@@ -221,7 +236,7 @@ Handle<Value> ArrToFib(const Arguments& args) {
   print_arr(a, n);
 
 	// Do the OpenCL calculation
-//	runCL(a, results, n);
+	runCL(a, results, n);
 
   // PRINT ARRAY A
   printf("\n\n results array from runCL function \n\n");
