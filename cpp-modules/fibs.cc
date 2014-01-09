@@ -160,40 +160,6 @@ int runCL(int * a, int * results, int n)
 int get_random_number(int maxValue) {
   return rand()%maxValue+1;
 }
-/*
-int main (int argc, const char * argv[]) {
-	// Problem size
-	int n = 32;
-	
-	// Allocate some memory and a place for the results
-	int * a = (int *)malloc(n*sizeof(int));
-	int * results = (int *)malloc(n*sizeof(int));
-	
-	// Fill in the values
-	for(int i=0;i<n;i++){
-		a[i] = get_random_number(40);
-		results[i] = 0;
-	}
-	
-	// Do the OpenCL calculation
-	runCL(a, results, n);
-	
-	// Print out some results. For this example the values of all elements
-	// should be the same as the value of n
-	for(int i=0;i<n;i++) printf("%d\n",results[i]);
-	
-	// Free up memory
-	free(a);
-	free(results);
-	
-    return 0;
-}
-*/
-void print_arr(int * a, int size) {
-	for(int i=0;i<size;i++){
-    printf("%d: %d\n", i, a[i]);
-	}
-};
 
 Handle<Value> ArrToFib(const Arguments& args) {
   HandleScope scope;
