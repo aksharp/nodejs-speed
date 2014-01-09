@@ -13,10 +13,10 @@ Step by Step
 2) cd nodejs-speed/cpp-modules (go to dir that has c++ and opencl modules)
 3) node-gyp configure build (compile c++ and opencl on your OS)
 4) cd .. (go back to parent directory)
-2) npm install (install express.js dependency)
-3) node server-js.js 
-4) node server-cpp.js (in separate terminal)
-5) node server-web.js (in separate terminal)
-6) node server-open-cl.js (in separate terminal)
-7) open in browser: http://localhost:3000
-8) click on "GO !!!" button (test uses random numbers, feel free to click it multiple times)
+5) npm install (install express.js dependency)
+6) node server-js.js 
+7) node server-cpp.js (in separate terminal)
+8) node server-web.js (in separate terminal)
+9) node server-open-cl.js (in separate terminal)
+10) open in browser: http://localhost:3000
+11) click on "GO !!!" button (test uses random numbers, feel free to click it multiple times)
