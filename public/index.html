@@ -40,10 +40,6 @@
     $('#msg').html('');
   };
 
-  var fasterSlower = function(num){
-    return (num > 0) ? 'faster' : 'slower';
-  }
-
   var display = function(sortedArrElapsed){
     sortedArrElapsed[0].msg = '' //sortedArrElapsed[0].name + ' took ' + sortedArrElapsed[0].elapsed + 'ms to run';
     sortedArrElapsed[1].msg = sortedArrElapsed[1].name + ' is ' + Math.round(sortedArrElapsed[0].elapsed / sortedArrElapsed[1].elapsed * 10) / 10 + ' times faster than ' + sortedArrElapsed[0].name;
@@ -89,7 +85,7 @@
     return arr;
   };
 
-  var performPOC = function(url, outId, data) {
+  var calculate = function(url, outId, data) {
     $('#' + outId).html('loading...');
     $.ajax({
       url: url,
@@ -118,9 +114,9 @@
     var arrCommon = rndArr(10, 40);
     $('#div0').html('Calculate Nth Fibonacci # for each N in (' + arrCommon.join(", ") + ')');
     var data = {"arr": arrCommon};
-    performPOC('http://localhost:5000/poc-js', 'div1', data);
-    performPOC('http://localhost:4000/poc-cpp', 'div2', data);
-    performPOC('http://localhost:4040/poc-open-cl', 'div3', data);
+    calculate('http://localhost:5000/calculate-js', 'div1', data);
+    calculate('http://localhost:4000/calculate-cpp', 'div2', data);
+    calculate('http://localhost:4040/calculate-open-cl', 'div3', data);
   });
 </script>
 

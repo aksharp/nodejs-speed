@@ -12,8 +12,8 @@ var app = express();
 app.use('/public', express.static(__dirname + '/public'))
   .use(express.bodyParser());
 
-// poc cpp
-app.post('/poc-cpp', function(req, res){
+// calculate cpp
+app.post('/calculate-cpp', function(req, res){
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
   var arr = req.body.arr;

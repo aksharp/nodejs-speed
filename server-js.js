@@ -11,8 +11,8 @@ var express = require('express');
 var app = express();
 app.use(express.bodyParser());
 
-// poc js
-app.post('/poc-js', function(req, res){
+// calculate js
+app.post('/calculate-js', function(req, res){
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
   var arr = req.body.arr;

@@ -18,8 +18,8 @@ var execF = function(f, p1, fName){
   };  
 };
 
-// poc open cl
-app.post('/poc-open-cl', function(req, res){
+// calculate open cl
+app.post('/calculate-open-cl', function(req, res){
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
   var arr = req.body.arr;
