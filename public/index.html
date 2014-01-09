@@ -23,8 +23,7 @@
 <div class="red" id="div1"></div>
 <div class="green" id="div2"></div>
 <div class="blue" id="div3"></div>
-<div class="percent" id="percentDiff-cpp"></div>
-<div class="percent" id="percentDiff-opencl"></div>
+<div class="percent" id="msg"></div>
 <br>
 <button id="btn">GO !!!</button>
 
@@ -38,13 +37,24 @@
     jsElapsed = -1;
     cppElapsed = -1;
     openClElapsed = -1;
-    $('#percentDiff-cpp').html('');
-    $('#percentDiff-opencl').html('');
+    $('#msg').html('');
   };
 
   var fasterSlower = function(num){
     return (num > 0) ? 'faster' : 'slower';
   }
+
+  var display = function(sortedArrElapsed){
+    sortedArrElapsed[0].msg = '' //sortedArrElapsed[0].name + ' took ' + sortedArrElapsed[0].elapsed + 'ms to run';
+    sortedArrElapsed[1].msg = sortedArrElapsed[1].name + ' is ' + Math.round(sortedArrElapsed[0].elapsed / sortedArrElapsed[1].elapsed * 10) / 10 + ' times faster than ' + sortedArrElapsed[0].name;
+    sortedArrElapsed[2].msg = sortedArrElapsed[2].name + ' is ' + Math.round(sortedArrElapsed[1].elapsed / sortedArrElapsed[2].elapsed * 10) / 10 + ' times faster than ' + sortedArrElapsed[1].name 
+      + ' and is ' + Math.round(sortedArrElapsed[0].elapsed / sortedArrElapsed[2].elapsed * 10) / 10 + ' times faster than ' + sortedArrElapsed[0].name; 
+    var msg = '';
+    sortedArrElapsed.map(function(element){
+      msg = msg + '<br>' + element.msg;  
+    });
+    $('#msg').html(msg);
+  };
 
   var setElapsed = function(fName, elapsed){
     if (fName === 'js'){
@@ -56,17 +66,18 @@
     if (fName === 'open-cl'){
       openClElapsed = elapsed;
     }
-    if (jsElapsed > 0 && cppElapsed > 0) {
-      var percentDiff = 100 - cppElapsed * 100 / jsElapsed;
-      var roundedPercentDiff = Math.round(percentDiff);
-      $('#percentDiff-cpp').html('C++ is ' + Math.abs(roundedPercentDiff) + '% ' + fasterSlower(roundedPercentDiff) + ' than JS');
-    }
-     if (jsElapsed > 0 && cppElapsed > 0 && openClElapsed > 0) {
-      var percentDiffOpenCL = 100 - openClElapsed * 100 / cppElapsed;
-      var percentDiffOpenCL2 = 100 - openClElapsed * 100 / jsElapsed;
-      var roundedPercentDiffOpenCL = Math.round(percentDiffOpenCL);
-      var roundedPercentDiffOpenCL2 = Math.round(percentDiffOpenCL2);
-      $('#percentDiff-opencl').html('OpenCL is ' + Math.abs(roundedPercentDiffOpenCL) + '% ' + fasterSlower(roundedPercentDiffOpenCL) + ' than C++ and ' + Math.abs(roundedPercentDiffOpenCL2) + '% ' + fasterSlower(roundedPercentDiffOpenCL2) + ' than JS');
+    if (jsElapsed > 0 && cppElapsed > 0 && openClElapsed > 0) {
+      var arrElapsed = [
+        {name: 'c++', elapsed: cppElapsed}, 
+        {name: 'js', elapsed: jsElapsed}, 
+        {name: 'open-cl', elapsed: openClElapsed} 
+      ];
+      var sortedArrElapsed = arrElapsed.sort(function(a, b){
+        return b.elapsed < a.elapsed ?  -1 
+         : b.elapsed > a.elapsed ? 1 
+         : 0;
+      });
+      display(sortedArrElapsed);
     }
  }
 
