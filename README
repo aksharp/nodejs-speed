@@ -14,7 +14,7 @@ Step by Step
 3) node-gyp configure build (compile c++ and opencl on your OS)
 4) cd .. (go back to parent directory)
 2) npm install (install express.js dependency)
-3) node server-js.js (
+3) node server-js.js 
 4) node server-cpp.js (in separate terminal)
 5) node server-web.js (in separate terminal)
 6) node server-open-cl.js (in separate terminal)
