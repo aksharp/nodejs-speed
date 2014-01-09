@@ -29,53 +29,38 @@
 
 <script>
 
-  var jsElapsed = -1;
-  var cppElapsed = -1;
-  var openClElapsed = -1;
-  
-  var clearElapsed = function(){
-    jsElapsed = -1;
-    cppElapsed = -1;
-    openClElapsed = -1;
-    $('#msg').html('');
+  var sut = function(name, elapsed, result) {
+    return {
+      name: name,
+      elapsed: elapsed,
+      result: result
+    };
   };
 
-  var display = function(sortedArrElapsed){
-    sortedArrElapsed[0].msg = '' //sortedArrElapsed[0].name + ' took ' + sortedArrElapsed[0].elapsed + 'ms to run';
-    sortedArrElapsed[1].msg = sortedArrElapsed[1].name + ' is ' + Math.round(sortedArrElapsed[0].elapsed / sortedArrElapsed[1].elapsed * 10) / 10 + ' times faster than ' + sortedArrElapsed[0].name;
-    sortedArrElapsed[2].msg = sortedArrElapsed[2].name + ' is ' + Math.round(sortedArrElapsed[1].elapsed / sortedArrElapsed[2].elapsed * 10) / 10 + ' times faster than ' + sortedArrElapsed[1].name 
-      + ' and is ' + Math.round(sortedArrElapsed[0].elapsed / sortedArrElapsed[2].elapsed * 10) / 10 + ' times faster than ' + sortedArrElapsed[0].name; 
+  var SUTs = [];
+
+  var reset = function(){
+    SUTs = [];
+    $('#msg').html('');
+  }
+
+  var displaySUTs = function(unsortedSUTs){
+     var sortedSUTs = unsortedSUTs.sort(function(a, b){
+      return b.elapsed < a.elapsed ?  -1 
+       : b.elapsed > a.elapsed ? 1 
+       : 0;
+    });
+ 
+    sortedSUTs[0].msg = ''; 
+    sortedSUTs[1].msg = sortedSUTs[1].name + ' is ' + Math.round(sortedSUTs[0].elapsed / sortedSUTs[1].elapsed * 10) / 10 + ' times faster than ' + sortedSUTs[0].name;
+    sortedSUTs[2].msg = sortedSUTs[2].name + ' is ' + Math.round(sortedSUTs[1].elapsed / sortedSUTs[2].elapsed * 10) / 10 + ' times faster than ' + sortedSUTs[1].name 
+      + ' and is ' + Math.round(sortedSUTs[0].elapsed / sortedSUTs[2].elapsed * 10) / 10 + ' times faster than ' + sortedSUTs[0].name; 
     var msg = '';
-    sortedArrElapsed.map(function(element){
+    sortedSUTs.map(function(element){
       msg = msg + '<br>' + element.msg;  
     });
     $('#msg').html(msg);
   };
-
-  var setElapsed = function(fName, elapsed){
-    if (fName === 'js'){
-      jsElapsed = elapsed;
-    }
-    if (fName === 'c++'){
-      cppElapsed = elapsed;
-    }
-    if (fName === 'open-cl'){
-      openClElapsed = elapsed;
-    }
-    if (jsElapsed > 0 && cppElapsed > 0 && openClElapsed > 0) {
-      var arrElapsed = [
-        {name: 'c++', elapsed: cppElapsed}, 
-        {name: 'js', elapsed: jsElapsed}, 
-        {name: 'open-cl', elapsed: openClElapsed} 
-      ];
-      var sortedArrElapsed = arrElapsed.sort(function(a, b){
-        return b.elapsed < a.elapsed ?  -1 
-         : b.elapsed > a.elapsed ? 1 
-         : 0;
-      });
-      display(sortedArrElapsed);
-    }
- }
 
   var rndArr = function(arrSize, maxNum) {
     var arr = []; 
@@ -101,7 +86,12 @@
             + elapsed + 'ms <br>result: ' 
             + res.join(', ');
           $('#' + outId).html(html);
-          setElapsed(fName, elapsed);
+
+          SUTs.push(sut(data.fName, data.elapsed, data.res));       
+          if (SUTs.length == 3){
+            displaySUTs(SUTs);            
+          }
+
         }, 
         function( jqXHR, textStatus, errorThrown ) {
           $('#' + outId).html('error');
@@ -110,7 +100,7 @@
   }
 
   $('#btn').click(function(){
-    clearElapsed();
+    reset();
     var arrCommon = rndArr(10, 40);
     $('#div0').html('Calculate Nth Fibonacci # for each N in (' + arrCommon.join(", ") + ')');
     var data = {"arr": arrCommon};
